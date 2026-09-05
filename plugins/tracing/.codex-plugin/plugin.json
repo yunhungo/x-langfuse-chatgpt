@@ -1,6 +1,6 @@
 {
   "name": "tracing",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Codex Stop-hook observability with YAML configuration and Langfuse compatibility.",
   "author": {
     "name": "yunhungo",

@@ -1,6 +1,6 @@
 {
   "name": "@yunhungo/x-langfuse-chatgpt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Langfuse observability plugin for the OpenAI Codex coding agent for tracing prompts, agent turns, model generations, and tool calls.",
   "license": "MIT",
   "author": "yunhungo",

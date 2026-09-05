@@ -274,6 +274,19 @@ and delays completion receipts until network export succeeds.
   absent; the parser does not fabricate them. Subagent nesting follows upstream
   behavior, including possible dispatch tool and child execution observations.
 
+## TTFT, TPS and timing accuracy
+
+The Stop hook sees persisted transcript items, not network request/stream events.
+Generation start/end times describe the transcript record window; they can omit
+request waiting time or include tool work. Do not use their latency to calculate
+model tokens per second. TTFT (`completionStartTime` / `timeToFirstToken`) remains
+unset because the rollout does not provide request-start/first-token timestamps.
+Generations include `codex.timing_source`, `codex.ttft_available: false` and
+`codex.tps_available: false` metadata so this limitation is visible in Langfuse.
+Precise TTFT/TPS requires instrumentation at the model request/stream boundary.
+Reasoning effort is exported as a model parameter when recorded in turn context.
+A zero cost with no matched Langfuse model/pricing is not proof of a free request.
+
 ## Privacy
 
 Configured Langfuse credentials and common API-key prefixes are masked before

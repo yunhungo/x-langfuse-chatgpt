@@ -267,7 +267,17 @@ async function emitTurn(
         output: buildGenerationOutput(step, clip),
         model: turn.model,
         usageDetails: toUsageDetails(step.usage),
-        metadata: { "codex.step_index": i },
+        modelParameters:
+          typeof turn.invocationParams?.effort === "string"
+            ? { reasoning_effort: turn.invocationParams.effort }
+            : undefined,
+        metadata: {
+          "codex.step_index": i,
+          "codex.timing_source": "transcript_record_window",
+          "codex.ttft_available": false,
+          "codex.tps_available": false,
+          "codex.timing_limitation": "No request-start or first-token timestamps in rollout",
+        },
       },
       {
         asType: "generation",

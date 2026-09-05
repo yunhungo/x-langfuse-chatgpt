@@ -88,6 +88,13 @@ describe("convertRollout", () => {
     expect(parentId(root!)).toBeUndefined(); // top-level turn = its own trace
     expect(attr(root!, "langfuse.observation.input")).toContain("List the files");
     expect(attr(root!, "langfuse.observation.output")).toContain("two files");
+    const generationForMetrics = spans.find((s) => obsType(s) === "generation");
+    expect(attr(generationForMetrics!, "langfuse.observation.metadata.codex.ttft_available")).toBe(
+      "false",
+    );
+    expect(attr(generationForMetrics!, "langfuse.observation.metadata.codex.tps_available")).toBe(
+      "false",
+    );
 
     // Backdated to the turn's task_started timestamp.
     expect(startMs(root!)).toBe(Date.parse("2026-06-03T10:00:01.000Z"));

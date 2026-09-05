@@ -57029,6 +57029,15 @@ function parseSession(lines) {
 				turn.turnId = typeof p.turn_id === "string" ? p.turn_id : void 0;
 				continue;
 			}
+			if (!turn && ![
+				"user_message",
+				"item_completed",
+				"agent_message",
+				"token_count",
+				"web_search_end",
+				"collab_agent_spawn_end",
+				"sub_agent_activity"
+			].includes(et)) continue;
 			ensureTurn(ts);
 			if (et === "user_message" && typeof p.message === "string") {
 				if (!turn.userInput) turn.userInput = p.message;
@@ -57282,7 +57291,14 @@ async function emitTurn(turn, sessionMeta, ctx) {
 			output: buildGenerationOutput(step, clip),
 			model: turn.model,
 			usageDetails: toUsageDetails(step.usage),
-			metadata: { "codex.step_index": i }
+			modelParameters: typeof turn.invocationParams?.effort === "string" ? { reasoning_effort: turn.invocationParams.effort } : void 0,
+			metadata: {
+				"codex.step_index": i,
+				"codex.timing_source": "transcript_record_window",
+				"codex.ttft_available": false,
+				"codex.tps_available": false,
+				"codex.timing_limitation": "No request-start or first-token timestamps in rollout"
+			}
 		}, {
 			asType: "generation",
 			startTime: new Date(step.startTime),

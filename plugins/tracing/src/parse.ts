@@ -300,6 +300,20 @@ export function parseSession(lines: RolloutLine[]): {
         continue;
       }
 
+      // Session-level events between turns must not invent empty model turns.
+      if (
+        !turn &&
+        ![
+          "user_message",
+          "item_completed",
+          "agent_message",
+          "token_count",
+          "web_search_end",
+          "collab_agent_spawn_end",
+          "sub_agent_activity",
+        ].includes(et)
+      )
+        continue;
       ensureTurn(ts);
 
       if (et === "user_message" && typeof p.message === "string") {

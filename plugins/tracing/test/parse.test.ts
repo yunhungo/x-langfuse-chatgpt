@@ -337,3 +337,19 @@ describe("user prompt extraction", () => {
     expect(turns[0]!.userInput).toBe("sag mal hallo");
   });
 });
+
+describe("session lifecycle records", () => {
+  it("does not create an empty turn for settings applied between resumed turns", () => {
+    const lines = loadFixture("rollout-two-turns-main.jsonl");
+    const secondStart = lines.findIndex(
+      (line, index) =>
+        index > 1 && line.type === "event_msg" && line.payload.type === "task_started",
+    );
+    lines.splice(secondStart, 0, {
+      timestamp: lines[secondStart].timestamp,
+      type: "event_msg",
+      payload: { type: "thread_settings_applied" },
+    });
+    expect(parseSession(lines).turns).toHaveLength(2);
+  });
+});
