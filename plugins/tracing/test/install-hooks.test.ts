@@ -39,3 +39,37 @@ it.each(['--global', '--project'])('installs %s without overwriting configuratio
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+it('ships a self-contained npm package with a working bin and configuration template', () => {
+  const root = mkdtempSync(join(tmpdir(), 'hooks-package-'));
+  try {
+    execFileSync('npm', ['pack', '--ignore-scripts', '--pack-destination', root], {
+      cwd: resolve('.'),
+      env: { ...process.env, npm_config_cache: join(root, 'npm-cache') },
+      stdio: 'pipe',
+    });
+    const manifest = JSON.parse(readFileSync(resolve('package.json'), 'utf8'));
+    execFileSync('tar', [
+      '-xzf',
+      join(root, `${manifest.name}-${manifest.version}.tgz`),
+      '-C',
+      root,
+    ]);
+    const unpacked = join(root, 'package');
+    const packagedManifest = JSON.parse(readFileSync(join(unpacked, 'package.json'), 'utf8'));
+    const installer = join(unpacked, packagedManifest.bin['x-langfuse-chatgpt']);
+    const configDir = join(root, 'config');
+    execFileSync(process.execPath, [installer, '--global'], {
+      cwd: root,
+      env: { ...process.env, CODEX_HOME: configDir },
+      stdio: 'pipe',
+    });
+    expect(readFileSync(join(configDir, 'langfuse.yaml'), 'utf8')).toContain('enabled: false');
+    expect(existsSync(join(configDir, 'hooks/x-langfuse/THIRD_PARTY_NOTICES.txt'))).toBe(true);
+    expect(existsSync(join(unpacked, 'node_modules'))).toBe(false);
+    const help = execFileSync(process.execPath, [installer, '--help'], { encoding: 'utf8' });
+    expect(help).toContain('--project');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});

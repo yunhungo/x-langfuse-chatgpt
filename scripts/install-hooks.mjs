@@ -10,12 +10,20 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const args = process.argv.slice(2);
+if (args.length === 1 && ['--help', '-h'].includes(args[0])) {
+  console.log('Usage: x-langfuse-chatgpt --global | --project [project-path]');
+  process.exit(0);
+}
+if (Number(process.versions.node.split('.')[0]) < 22) {
+  console.error('Node.js 22 or newer is required.');
+  process.exit(1);
+}
 if (
   !['--global', '--project'].includes(args[0]) ||
   args.length > 2 ||
   (args[0] === '--global' && args[1])
 ) {
-  console.error('Usage: node scripts/install-hooks.mjs --global | --project [project-path]');
+  console.error('Usage: x-langfuse-chatgpt --global | --project [project-path]');
   process.exit(1);
 }
 if (process.platform === 'win32')

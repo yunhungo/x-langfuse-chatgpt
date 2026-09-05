@@ -44,6 +44,50 @@ this package does not register the short-timeout Interrupt hook.
 The runtime is committed as a self-contained `plugins/tracing/dist/index.mjs`.
 Installing from a clone does not require `pnpm install` or a build.
 
+## One-command installation
+
+Node.js 22+ is required. Choose one installation scope; no manual clone or build
+is needed. Both entry points invoke the same configuration-preserving installer.
+
+### Shell script (macOS and Linux)
+
+```bash
+# Global hooks:
+curl -fsSL https://raw.githubusercontent.com/yunhungo/x-langfuse-chatgpt/main/install.sh | bash -s -- --global
+
+# OR project hooks (omit the path to use the current directory):
+curl -fsSL https://raw.githubusercontent.com/yunhungo/x-langfuse-chatgpt/main/install.sh | bash -s -- --project /absolute/path/to/project
+```
+
+The script downloads the current GitHub archive to a temporary directory, copies
+the standalone runtime to the selected `.codex` directory, and removes its
+temporary download. It requires `curl`, `tar` and `bash`, and does not require Git
+or pnpm. To inspect it before execution, download `install.sh` and run
+`bash install.sh --global` after reviewing it.
+
+### npx (from GitHub)
+
+```bash
+# Global hooks:
+npx --yes --package=https://github.com/yunhungo/x-langfuse-chatgpt/archive/refs/heads/main.tar.gz x-langfuse-chatgpt --global
+
+# OR project hooks:
+npx --yes --package=https://github.com/yunhungo/x-langfuse-chatgpt/archive/refs/heads/main.tar.gz x-langfuse-chatgpt --project /absolute/path/to/project
+```
+
+This uses the package's `bin` entry through [npm exec](https://docs.npmjs.com/cli/v11/commands/npm-exec/).
+It downloads from GitHub; **the bare npm registry name `x-langfuse-chatgpt` has not
+been published**. Use the full URL above. npm caches the downloaded package; the
+installed hook is copied outside that cache and remains usable after cache cleanup.
+For a reproducible install, replace `refs/heads/main` in the archive URL with a
+specific Git commit SHA. The current installer supports macOS and Linux.
+
+After either command, edit the generated `langfuse.yaml`, enable tracing and
+enter your Langfuse keys, then restart Codex and review the hook in `/hooks`.
+Installation itself does not enable uploads or bypass hook trust. See the
+configuration steps below. Running the same command again updates the copied
+runtime while preserving existing Langfuse configuration.
+
 ## Quick start: direct hooks installation
 
 ```bash

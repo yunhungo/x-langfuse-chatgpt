@@ -53,5 +53,18 @@
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "pnpm@9.5.0"
+  "packageManager": "pnpm@9.5.0",
+  "bin": {
+    "x-langfuse-chatgpt": "scripts/install-hooks.mjs"
+  },
+  "files": [
+    "scripts/install-hooks.mjs",
+    "examples/langfuse.yaml",
+    "plugins/tracing/dist/index.mjs",
+    "plugins/tracing/LICENSE",
+    "plugins/tracing/NOTICE",
+    "plugins/tracing/THIRD_PARTY_NOTICES.txt",
+    "PRIVACY.md",
+    "NOTICE"
+  ]
 }
