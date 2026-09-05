@@ -1,0 +1,57 @@
+{
+  "name": "x-langfuse-chatgpt",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OpenAI Codex plugin that traces agent turns, tool calls, and subagents to Langfuse",
+  "keywords": [
+    "codex",
+    "langfuse",
+    "openai",
+    "observability",
+    "tracing",
+    "opentelemetry"
+  ],
+  "homepage": "https://github.com/yunhungo/x-langfuse-chatgpt#readme",
+  "bugs": {
+    "url": "https://github.com/yunhungo/x-langfuse-chatgpt/issues"
+  },
+  "license": "MIT",
+  "author": "yunhungo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yunhungo/x-langfuse-chatgpt.git"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsdown --config plugins/tracing/tsdown.config.ts && node scripts/generate-notices.mjs",
+    "test": "pnpm run build && vitest run",
+    "test:watch": "pnpm run build && vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:tsc": "tsc --noEmit",
+    "lint": "pnpm run format:check && pnpm run lint:tsc && pnpm run build"
+  },
+  "dependencies": {
+    "@langfuse/otel": "^5.11.0",
+    "@langfuse/tracing": "^5.11.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/core": "^2.0.1",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.205.0",
+    "@opentelemetry/sdk-trace-base": "^2.0.1",
+    "@opentelemetry/sdk-trace-node": "^2.0.1",
+    "yaml": "2.8.3",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "npm": "11.15.0",
+    "prettier": "^3.9.4",
+    "tsdown": "^0.18.0",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@9.5.0"
+}

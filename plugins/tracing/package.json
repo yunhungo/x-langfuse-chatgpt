@@ -1,0 +1,40 @@
+{
+  "name": "@yunhungo/x-langfuse-chatgpt",
+  "version": "0.1.0",
+  "description": "Langfuse observability plugin for the OpenAI Codex coding agent for tracing prompts, agent turns, model generations, and tool calls.",
+  "license": "MIT",
+  "author": "yunhungo",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yunhungo/x-langfuse-chatgpt.git",
+    "directory": "plugins/tracing"
+  },
+  "bugs": {
+    "url": "https://github.com/yunhungo/x-langfuse-chatgpt/issues"
+  },
+  "homepage": "https://github.com/yunhungo/x-langfuse-chatgpt#readme",
+  "keywords": [
+    "codex",
+    "codex-plugin",
+    "langfuse",
+    "openai",
+    "observability",
+    "tracing",
+    "opentelemetry"
+  ],
+  "files": [
+    ".codex-plugin",
+    "hooks",
+    "dist",
+    "LICENSE",
+    "NOTICE",
+    "THIRD_PARTY_NOTICES.txt"
+  ],
+  "scripts": {
+    "prepack": "pnpm -w run build"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

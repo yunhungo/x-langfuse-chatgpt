@@ -1,0 +1,20 @@
+{
+  "name": "x-langfuse-chatgpt",
+  "interface": {
+    "displayName": "X Langfuse Chatgpt"
+  },
+  "plugins": [
+    {
+      "name": "tracing",
+      "source": {
+        "source": "local",
+        "path": "./plugins/tracing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

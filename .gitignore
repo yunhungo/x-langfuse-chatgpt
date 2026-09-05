@@ -1,0 +1,24 @@
+node_modules/
+*.log
+.DS_Store
+
+# Codex writes a per-rollout dedup sidecar next to each transcript at runtime.
+*.jsonl.langfuse
+
+# Local debugging
+debug.log
+
+# Build output
+
+
+# Private runtime configuration and local indexes
+.codegraph/
+.codex/
+.env
+.env.*
+langfuse.yaml
+langfuse.yml
+langfuse.json
+!examples/langfuse.yaml
+*.backup-*
+coverage/

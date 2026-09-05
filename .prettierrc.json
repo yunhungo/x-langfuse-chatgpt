@@ -1,0 +1,17 @@
+{
+  "printWidth": 100,
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": [
+        "plugins/tracing/src/{yaml-config,privacy,instrumentation}.ts",
+        "plugins/tracing/test/{yaml-config,export-http,install-hooks}.test.ts",
+        "scripts/*.mjs"
+      ],
+      "options": {
+        "singleQuote": true,
+        "jsxSingleQuote": true
+      }
+    }
+  ]
+}

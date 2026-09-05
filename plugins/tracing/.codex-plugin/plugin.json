@@ -1,0 +1,24 @@
+{
+  "name": "tracing",
+  "version": "0.1.0",
+  "description": "Codex Stop-hook observability with YAML configuration and Langfuse compatibility.",
+  "author": {
+    "name": "yunhungo",
+    "url": "https://github.com/yunhungo"
+  },
+  "homepage": "https://github.com/yunhungo/x-langfuse-chatgpt",
+  "repository": "https://github.com/yunhungo/x-langfuse-chatgpt",
+  "license": "MIT",
+  "keywords": ["codex", "hooks", "langfuse", "observability", "tracing"],
+  "interface": {
+    "displayName": "x Langfuse",
+    "shortDescription": "Observe Codex with YAML-configured hooks",
+    "longDescription": "Exports Codex turns, generations, tool calls and subagents to Langfuse with global and project YAML configuration. Based on the MIT-licensed Langfuse observability plugin.",
+    "developerName": "yunhungo",
+    "category": "Coding",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/yunhungo/x-langfuse-chatgpt",
+    "privacyPolicyURL": "https://github.com/yunhungo/x-langfuse-chatgpt/blob/main/PRIVACY.md",
+    "defaultPrompt": []
+  }
+}

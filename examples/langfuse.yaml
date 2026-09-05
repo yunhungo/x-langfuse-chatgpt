@@ -1,0 +1,22 @@
+# @created 2026-09-05
+# @description 提供全局和项目级 Langfuse 配置示例。
+# @author yunhungo
+# Store at ~/.codex/langfuse.yaml or <project>/.codex/langfuse.yaml.
+# Direct YAML credentials are supported; shell exports are optional.
+enabled: false
+public_key: ""
+secret_key: ""
+base_url: https://cloud.langfuse.com
+# environment: development
+# user_id: developer-alias
+# tags: [codex, local]
+# metadata:
+#   team: engineering
+max_chars: 20000
+debug: false
+fail_on_error: false
+# Optional JavaScript regular expressions (global replacement):
+redact_patterns: []
+# redact_patterns: ['[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}']
+# Optional environment references, resolved after parsing YAML:
+# secret_key: '${MY_LANGFUSE_SECRET}'

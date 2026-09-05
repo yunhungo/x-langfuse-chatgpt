@@ -1,0 +1,16 @@
+x-langfuse-chatgpt
+Copyright (c) 2026 yunhungo (modifications and additional modules)
+
+Derived from langfuse/codex-observability-plugin, MIT licensed.
+Upstream revision: 1db5c0f5ddce569afc112c6476e21d00cf9a482e
+Source: https://github.com/langfuse/codex-observability-plugin
+The upstream MIT license and copyright notice are preserved in LICENSE.
+
+The rollout parser, trace reconstruction, utilities, fixtures and baseline tests
+originate from the upstream project. This distribution adds YAML configuration,
+privacy filtering, global/project hook installation, acknowledged export handling,
+HTTP integration tests and documentation. It is independently maintained and is
+not an official OpenAI or Langfuse product.
+
+The bundled dist/index.mjs includes MIT/Apache-2.0/ISC dependencies (Langfuse,
+OpenTelemetry, YAML and Zod) with license texts in plugins/tracing/THIRD_PARTY_NOTICES.txt.

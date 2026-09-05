@@ -1,0 +1,110 @@
+/**
+ * @created unknown
+ * @description 验证插件命令在任意工作目录独立运行。
+ * @author yunhungo
+ * Derived from Langfuse (MIT); local modifications 2026-09-05. See NOTICE.
+ */
+import { spawn } from "node:child_process";
+import * as fs from "node:fs";
+import * as os from "node:os";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { afterEach, describe, expect, it } from "vitest";
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+const hookConfigFile = path.join(repoRoot, "plugins/tracing/hooks/hooks.json");
+const pluginRootDir = path.join(repoRoot, "plugins/tracing");
+
+const tmpDirs: string[] = [];
+
+function makeTempDir(prefix: string): string {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+  tmpDirs.push(dir);
+  return dir;
+}
+
+function readHookCommand(): string {
+  const config = JSON.parse(fs.readFileSync(hookConfigFile, "utf-8")) as {
+    hooks: { Stop: Array<{ hooks: Array<{ command: string }> }> };
+  };
+  return config.hooks.Stop[0].hooks[0].command;
+}
+
+function runShellCommand(
+  command: string,
+  options: { cwd: string; env: NodeJS.ProcessEnv; input: string },
+): Promise<{ code: number | null; stderr: string; stdout: string }> {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, {
+      cwd: options.cwd,
+      env: options.env,
+      shell: true,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+    let stdout = "";
+    let stderr = "";
+    const timeout = setTimeout(() => {
+      child.kill("SIGTERM");
+      reject(new Error("hook command timed out"));
+    }, 10_000);
+
+    child.stdout.setEncoding("utf-8");
+    child.stderr.setEncoding("utf-8");
+    child.stdout.on("data", (chunk) => (stdout += chunk));
+    child.stderr.on("data", (chunk) => (stderr += chunk));
+    child.once("error", (error) => {
+      clearTimeout(timeout);
+      reject(error);
+    });
+    child.once("close", (code) => {
+      clearTimeout(timeout);
+      resolve({ code, stdout, stderr });
+    });
+    child.stdin.end(options.input);
+  });
+}
+
+afterEach(() => {
+  while (tmpDirs.length) {
+    fs.rmSync(tmpDirs.pop()!, { recursive: true, force: true });
+  }
+});
+
+describe("bundled Stop hook command", () => {
+  it("runs from an arbitrary session cwd via PLUGIN_ROOT instead of a relative repo path", async () => {
+    const codexHome = makeTempDir("lf-codex-home-");
+    const sessionCwd = makeTempDir("lf-codex-cwd-");
+
+    const { code, stderr, stdout } = await runShellCommand(readHookCommand(), {
+      cwd: sessionCwd,
+      env: {
+        ...Object.fromEntries(
+          Object.entries(process.env).filter(
+            ([key]) => !/^(LANGFUSE_|OTEL_|TRACE_TO_LANGFUSE|NODE_OPTIONS)/.test(key),
+          ),
+        ),
+        NODE_NO_WARNINGS: "1",
+        PLUGIN_ROOT: pluginRootDir,
+        CODEX_HOME: codexHome,
+        HOME: codexHome,
+      },
+      input: JSON.stringify({
+        hook_event_name: "Stop",
+        transcript_path: path.join(sessionCwd, "rollout.jsonl"),
+      }),
+    });
+
+    expect(code).toBe(0);
+    expect(stdout).toBe("");
+    expect(stderr).toBe("");
+  });
+
+  it("does not depend on the old marketplace-root relative path", () => {
+    expect(readHookCommand()).not.toContain("./plugins/tracing/dist/index.mjs");
+  });
+
+  it("uses no shell syntax beyond the placeholder Codex substitutes itself", () => {
+    expect(readHookCommand().replaceAll("${PLUGIN_ROOT}", "")).not.toContain("$");
+  });
+});
